@@ -1,0 +1,37 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+entity memorie_viteza is
+	port(POW,clk:in STD_LOGIC;
+	viteza:out STD_LOGIC_VECTOR(10 downto 0);
+	mem_prog:in STD_LOGIC_VECTOR(5 downto 0);
+	vit:in STD_LOGIC_VECTOR(1 downto 0));
+end entity;
+
+architecture memorie_viteza of memorie_viteza is
+signal in_mem_viteza:STD_LOGIC_VECTOR(1 downto 0):=('Z','Z');	
+component intrari_mem_viteza is
+	port(mem_prog:in STD_LOGIC_VECTOR(5 downto 0);
+	vit:STD_LOGIC_VECTOR(1 downto 0);
+	in_mem_viteza:out STD_LOGIC_VECTOR(1 downto 0));
+end component;
+begin 
+	P1:	intrari_mem_viteza port map(mem_prog=>mem_prog,vit=>vit,in_mem_viteza=>in_mem_viteza);
+	process(POW,clk)
+	begin
+		if(POW='1') then
+			if(clk'event and clk='1') then 
+				if(in_mem_viteza="00") then
+					viteza<="01100100000";
+				elsif(in_mem_viteza="01") then
+					viteza<="01111101000";
+				elsif(in_mem_viteza="10") then
+					viteza<="10010110000";
+				elsif(in_mem_viteza="11") then
+					viteza<="ZZZZZZZZZZZ";
+				end if;
+			end if;
+		end if;
+	end process;
+end architecture;	
+				

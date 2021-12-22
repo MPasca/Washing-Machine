@@ -1,0 +1,51 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity num_spalare is	
+	port( enable : in STD_LOGIC;
+	reset : inout STD_LOGIC := '0';
+	clk : in STD_LOGIC;
+	SfP : out STD_LOGIC);
+end num_spalare;
+
+architecture num_sp of num_spalare is
+signal Q : STD_LOGIC_VECTOR (4 downto 0) := "00000";
+signal D : STD_LOGIC_VECTOR (4 downto 0) := "00000";
+begin
+	process(enable, clk)
+	begin
+	if clk'event and clk = '1' then
+		if enable = '1' then
+			if reset = '1' then
+				Q <= "00000";
+			else
+				if Q = "10100" then
+					SfP <= '1';
+					reset <= '1';
+				else 
+					Q(0) <= D(0);
+					Q(1) <= D(1);
+					Q(2) <= D(2);
+					Q(3) <= D(3);
+					Q(4) <= D(4);
+					
+					D(0) <= not Q(0);
+					D(1) <= Q(0) xor Q(1);
+					D(2) <= Q(2) xor (Q(1) and Q(0));
+					D(3) <= Q(3) xor (Q(2) and Q(1) and Q(0)); 
+					D(4) <= Q(4) or ((not Q(4)) and Q(3) and Q(2) and Q(1) and Q(0));
+				end if;
+			end if;
+		else
+			Q <= "ZZZZZ";	
+		end if;
+	end if;	
+	end process;
+end architecture;	
+				
+
+				
+				
+	
+	
+	

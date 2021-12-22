@@ -1,0 +1,26 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity clatire_suplimentara is
+	port(SCL_supl,clk:in STD_LOGIC;
+	SfCL_supl:out STD_LOGIC);
+end entity;
+
+architecture clatire_suplimentara of clatire_suplimentara is
+signal Q:STD_LOGIC_VECTOR(3 downto 0):="0000";
+signal reset:STD_LOGIC:='0';
+begin 
+	process(clk,reset)
+	begin
+		if(SCL_supl='1') then
+			if(reset='1') then
+				Q<="0000";
+			elsif(clk'event and clk='1') then
+				Q<=Q+1;
+			end if;	
+		end if;
+		SfCL_supl<=(Q(0)xnor '0')and(Q(1)xnor '1')and (Q(2)xnor '0')and(Q(3)xnor '1');
+		reset<=(Q(0)xnor '0')and(Q(1)xnor '1')and (Q(2)xnor '0')and(Q(3)xnor '1');
+	end process;
+end architecture;	

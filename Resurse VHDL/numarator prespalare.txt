@@ -1,0 +1,49 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity num_presp is	
+	port( enable : in STD_LOGIC;
+	reset : inout STD_LOGIC := '0';
+	clk : in STD_LOGIC;
+	SfPRE : out BIT);
+end num_presp;
+
+architecture num_pre of num_presp is
+signal Q : STD_LOGIC_VECTOR (3 downto 0) := "0000";
+signal D : STD_LOGIC_VECTOR (3 downto 0) := "0000";
+begin
+	process(Q, enable, clk)
+	begin
+	if enable = '1' then 
+		if clk'event and clk = '1' then
+			if reset = '1' then
+				Q <= "0000";
+			else
+				if Q = "1010" then
+					SfPRE <= '1';
+					reset <= '1';
+				else 
+					Q(0) <= D(0);
+					Q(1) <= D(1);
+					Q(2) <= D(2);
+					Q(3) <= D(3);
+					
+					D(0) <= not Q(0);
+					D(1) <= Q(0) xor Q(1);
+					D(2) <= Q(2) xor (Q(1) and Q(0));
+					D(3) <= Q(3) or (Q(2) and Q(1) and Q(0)); 
+				end if;
+			end if;
+		end if;
+	else
+		Q <= "ZZZZ";
+	end if;
+	end process;
+end architecture;	
+				
+
+				
+				
+	
+	
+	

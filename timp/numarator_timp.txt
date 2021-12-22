@@ -1,0 +1,78 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity timpul is
+	port(timp_in:in STD_LOGIC_VECTOR(15 downto 0);
+	clk:in STD_LOGIC;
+	timp_out:out STD_LOGIC_VECTOR(15 downto 0));
+end entity;
+architecture timpul of timpul is
+signal num_sec_unitati:std_logic_vector(3 downto 0):="ZZZZ";	
+signal num_sec_zeci:std_logic_vector(3 downto 0):="ZZZZ";  
+signal num_minute_unitati:std_logic_vector(3 downto 0):="ZZZZ";
+signal num_minute_zeci:std_logic_vector(3 downto 0):="ZZZZ";
+signal borrow_1:std_logic:='0';
+signal borrow_2:std_logic:='0';
+signal borrow_3:std_logic:='0';
+begin
+	secunde_unitati:process(clk)
+	begin
+		if(clk'event and clk='1') then
+			if(num_sec_unitati="ZZZZ") then
+				num_sec_unitati(3 downto 0)<=timp_in(3 downto 0);
+			elsif(num_sec_unitati="0000") then
+				borrow_1<='1';
+				num_sec_unitati(3 downto 0)<="1001";
+			else
+				borrow_1<='0';
+				num_sec_unitati<=num_sec_unitati-1;
+			end if;
+		end if;
+		timp_out(3 downto 0)<=num_sec_unitati(3 downto 0); 
+	end process secunde_unitati;  
+	
+	secunde_zeci:process(clk,borrow_1)
+	begin
+		if(num_sec_zeci="ZZZZ") then
+			num_sec_zeci(3 downto 0)<=timp_in(7 downto 4);
+		elsif(borrow_1'event and borrow_1='1') then
+		if(num_sec_zeci="0000") then
+			num_sec_zeci(3 downto 0)<="0101";
+			borrow_2<='1';
+		else
+			num_sec_zeci<=num_sec_zeci-1;
+			borrow_2<='0';
+			end if;
+		end if;
+	timp_out(7 downto 4)<=num_sec_zeci(3 downto 0);
+	end process secunde_zeci;
+	
+	minute_unitati:process(clk,borrow_2)
+	begin
+		if(num_minute_unitati="ZZZZ") then
+			num_minute_unitati(3 downto 0)<=timp_in(11 downto 8);
+		elsif(borrow_2'event and borrow_2='1') then
+			if(num_minute_unitati="0000") then
+				num_minute_unitati<="1001";
+				borrow_3<='1';
+			else
+				num_minute_unitati<=num_minute_unitati-1;
+				borrow_3<='0';
+			end if;
+		end if;
+		timp_out(11 downto 8)<=num_minute_unitati(3 downto 0);
+	end process minute_unitati;	
+	
+	minute_zeci:process(clk,borrow_3)
+	begin
+		if(num_minute_zeci="ZZZZ") then
+			num_minute_zeci(3 downto 0)<=timp_in(15 downto 12);
+		elsif(borrow_3'event and borrow_3='1') then 
+				num_minute_zeci<=num_minute_zeci-1;
+		end if;
+		timp_out(15 downto 12)<=num_minute_zeci(3 downto 0);
+	end process minute_zeci;	
+end architecture;
+
+		

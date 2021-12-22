@@ -1,0 +1,36 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+entity memorie_temp is
+	port(POW,clk:in STD_LOGIC;
+	Tsel: out STD_LOGIC_VECTOR(6 downto 0);
+	Temp:in STD_LOGIC_VECTOR(1 downto 0);
+	mem_prog:in STD_LOGIC_VECTOR(5 downto 0));
+end entity;
+
+architecture rom of memorie_temp is
+signal in_temp:STD_LOGIC_VECTOR(1 downto 0):=('Z','Z');
+component intrari_mem is
+	port(mem_prog:in STD_LOGIC_VECTOR(5 downto 0);
+	Temp:in STD_LOGIC_VECTOR(1 downto 0);
+	in_mem:out STD_LOGIC_VECTOR(1 downto 0)); 
+end component;
+begin
+	P1: intrari_mem port map(mem_prog=>mem_prog,Temp=>Temp,in_mem=>in_temp);
+	process(clk,POW)
+	begin
+		if(POW='1') then
+			if(clk'event and clk='1') then
+				if(in_temp="00") then
+					Tsel<="0001111";
+				elsif(in_temp="01") then
+					Tsel<="0011001";
+				elsif(in_temp="10") then
+					Tsel<="0101101";
+				elsif(in_temp="11") then
+					Tsel<="1001011"; 
+				end if;	
+			 end if;
+		end if;
+	end process;
+end architecture;

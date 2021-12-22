@@ -1,0 +1,23 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity intrari_mem is
+	port(mem_prog:in STD_LOGIC_VECTOR(5 downto 0);
+	Temp:in STD_LOGIC_VECTOR(1 downto 0);
+	in_mem:out STD_LOGIC_VECTOR(1 downto 0)); 
+	
+end entity;
+
+architecture cmpt of intrari_mem is
+begin
+	process(mem_prog,Temp)
+	begin
+		if(mem_prog="000000") then
+			in_mem(1 downto 0)<=Temp(1 downto 0);
+		else
+			in_mem(1 downto 0)<=mem_prog(5 downto 4);
+		end if;
+	end process;
+end architecture;
+	

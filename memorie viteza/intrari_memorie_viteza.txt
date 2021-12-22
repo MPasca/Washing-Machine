@@ -1,0 +1,22 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity intrari_mem_viteza is
+	port(mem_prog:in STD_LOGIC_VECTOR(5 downto 0);
+	vit:STD_LOGIC_VECTOR(1 downto 0);
+	in_mem_viteza:out STD_LOGIC_VECTOR(1 downto 0));
+end entity;
+
+architecture intrari_mem_viteza of intrari_mem_viteza is
+begin
+	process(mem_prog,vit)
+	begin
+		if(mem_prog="000000") then
+			in_mem_viteza(1 downto 0)<=vit(1 downto 0);
+		else
+			in_mem_viteza(1 downto 0)<=mem_prog(3 downto 2);
+		end if;
+	end process;
+end architecture;
+	

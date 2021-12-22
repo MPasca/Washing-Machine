@@ -1,0 +1,45 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity memorie_timp is
+	port(temp:in STD_LOGIC_VECTOR(1 downto 0);
+	prespalare,POW,clatire_suplimentara,clk:in STD_LOGIC;
+	timp:out STD_LOGIC_VECTOR(15 downto 0));
+end entity;
+
+architecture memorie_timp of memorie_timp is
+signal intrari:STD_LOGIC_VECTOR(3 downto 0);
+begin
+	intrari(3 downto 2)<=temp(1 downto 0);
+	intrari(1)<=prespalare;
+	intrari(0)<=clatire_suplimentara;
+	process(clk)
+	begin
+		if(POW='1') then
+			if(clk'event and clk='1') then
+				case intrari is
+					when "0000"=>timp<="0100010100110000";--45min,30sec
+					when "0001"=>timp<="0101010100110000";--55min,30sec
+					when "0010"=>timp<="0101011000000000";--56min  
+					when "0011"=>timp<="0110011000000000";--66min
+					when "0100"=>timp<="0100010101010000";--45min,50sec
+					when "0101"=>timp<="0101010101010000";--55min,50sec
+					when "0110"=>timp<="0101011001000000";--56min,40sec
+					when "0111"=>timp<="0110011001000000";--66min,40sec
+					when "1000"=>timp<="0100011000110000";--46min,30sec
+					when "1001"=>timp<="0101011000110000";--56min,30sec
+					when "1010"=>timp<="0101100000000000";--58min
+					when "1011"=>timp<="0110100000000000";--68min
+					when "1100"=>timp<="0100011100110000";--47min,30sec
+					when "1101"=>timp<="0101011100110000";--57min,30sec
+					when "1110"=>timp<="0110000000000000";--60min
+					when "1111"=>timp<="0111000000000000";--70min  
+					when others=>timp<="ZZZZZZZZZZZZZZZZ";
+				end case;
+			end if;
+		end if;
+	end process;
+end architecture;
+
+			

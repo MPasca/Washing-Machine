@@ -1,0 +1,13 @@
+entity clatireSup is
+	port(	ClatROM, Clat : in BIT;
+			Manual : in BIT;
+			ClatSel : out BIT );
+end clatireSup;
+
+architecture clat_sup of clatireSup is
+	signal Aut, Man : bit ;
+begin
+	Aut <= ClatROM and (not Manual);
+	Man <= Clat and Manual ;
+	ClatSel <= Aut or Man ;
+end architecture ;

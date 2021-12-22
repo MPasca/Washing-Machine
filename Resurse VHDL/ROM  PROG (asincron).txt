@@ -1,0 +1,69 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity ROM_Program is
+	port( Prog : in STD_LOGIC_VECTOR (2 downto 0);
+	Enable : in STD_LOGIC;
+	Temp : out STD_LOGIC_VECTOR (1 downto 0);
+	Vit : out STD_LOGIC_VECTOR (1 downto 0);
+	Pre : out STD_LOGIC;
+	Cl : out STD_LOGIC);
+end ROM_Program;
+
+architecture ROM_Prog of ROM_Program is
+type memorie is array (0 to 5) of STD_LOGIC_VECTOR (5 downto 0);
+begin
+	process(Prog, Enable)
+	variable m : memorie;
+	begin
+		m := ("000000", -- manual	 
+				"001000", -- spalare rapida
+				"100000", -- camasi
+				"010101", -- culori inchise
+				"010110", -- haine murdare
+				"111001"); -- antialergic	
+		if Enable = '1' then
+				case Prog is
+					when "000" => Temp <= m(0)(5 downto 4);	 -- manual
+								  Vit <= m(0)(3 downto 2);
+								  Pre <= m(0)(1);
+								  Cl <= m(0)(0);
+								  
+					when "001" => Temp <= m(1)(5 downto 4);	-- spalare rapida
+								  Vit <= m(1)(3 downto 2);
+								  Pre <= m(1)(1);
+								  Cl <= m(1)(0);
+								  
+					when "010" => Temp <= m(2)(5 downto 4);	 -- camasi
+								  Vit <= m(2)(3 downto 2);
+								  Pre <= m(2)(1);
+								  Cl <= m(2)(0);
+								  
+					when "011" => Temp <= m(3)(5 downto 4);	  -- culori inchise
+								  Vit <= m(3)(3 downto 2);
+								  Pre <= m(3)(1);
+								  Cl <= m(3)(0);
+								  
+					when "100" => Temp <= m(4)(5 downto 4);	  -- haine murdare
+								  Vit <= m(4)(3 downto 2);
+								  Pre <= m(0)(1);
+								  Cl <= m(4)(0); 
+								  
+					when "101" => Temp <= m(5)(5 downto 4);		-- antialergic
+								  Vit <= m(5)(3 downto 2);
+								  Pre <= m(5)(1);
+								  Cl <= m(5)(0);
+								  
+					when others => Temp <= "XX";	 -- manual
+								  Vit <= "XX";
+								  Pre <= 'X';
+								  Cl <= 'X';
+				end case;
+			else
+				Temp <= "ZZ";
+				Vit <= "ZZ";
+				Pre <= 'Z';
+				Cl <= 'Z';
+			end if;
+	end process;
+end ROM_Prog;

@@ -1,0 +1,31 @@
+library IEEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+
+entity numarator_temp is
+	port(enable:in STD_LOGIC;
+	TSel:in STD_LOGIC_VECTOR(6 downto 0);
+	clk:in STD_LOGIC;
+	ST:out STD_LOGIC);
+end entity;
+
+architecture num of numarator_temp is
+signal Q:STD_LOGIC_VECTOR(6 downto 0):=("0000000");	 
+signal reset:STD_LOGIC:='0';
+begin 
+	process(enable,reset,clk)
+	begin
+		
+		if(enable='1') then
+			if(reset='1') then
+				Q<="0000000";
+			elsif(clk'event and clk = '1') then
+				Q<=Q+1;
+			end if;	
+		end if;	
+		ST<=(Q(0)xnor TSel(0))and (Q(1)xnor TSel(1)) and (Q(2)xnor TSel(2)) and (Q(3)xnor TSel(3)) and (Q(4)xnor TSel(4)) and (Q(5)xnor TSel(5)) and (Q(6)xnor TSel(6));
+        reset<=	(Q(0)xnor TSel(0))and (Q(1)xnor TSel(1)) and (Q(2)xnor TSel(2)) and (Q(3)xnor TSel(3)) and (Q(4)xnor TSel(4)) and (Q(5)xnor TSel(5)) and (Q(6)xnor TSel(6));
+	end process;
+	
+end architecture;
+		

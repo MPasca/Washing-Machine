@@ -1,0 +1,13 @@
+entity prespalare is
+	port(	PRE_ROM, PRE : in BIT;
+			Manual : in BIT;
+			PRE_Sel : out BIT );
+end prespalare;
+
+architecture presp of prespalare is
+	signal Aut, Man : bit ;
+begin
+	Aut <= PRE_ROM and (not Manual);
+	Man <= PRE and Manual ;
+	PRE_Sel <= Aut or Man ;
+end architecture ;
